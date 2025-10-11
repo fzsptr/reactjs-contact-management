@@ -1,5 +1,5 @@
 {
-  "name": "contact-management",
+  "name": "frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,9 +12,9 @@
   "dependencies": {
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-router-dom": "^7.9.3",
+    "react-router": "^7.9.3",
     "react-use": "^17.6.0",
-    "sweetalert2": "^11.24.0"
+    "sweetalert2": "^11.25.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
@@ -25,11 +25,6 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
-    "vite": "npm:rolldown-vite@7.1.14"
-  },
-  "pnpm": {
-    "overrides": {
-      "vite": "npm:rolldown-vite@7.1.14"
-    }
+    "vite": "^7.1.7"
   }
 }
