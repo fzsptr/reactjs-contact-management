@@ -1,10 +1,67 @@
 import { useState } from "react"
+import { useEffectOnce, useLocalStorage } from "react-use"
+import userUpdateProfile from "../../lib/api/updateProfileApi"
+import { alertError, alertSuccess } from "../../lib/alert"
+import userUpdatePassword from "../../lib/api/updatePassword";
+import userDetail from "../../lib/api/detailApi";
 
 export default function UserProfile() {
 
-    const [name, setName] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
+    const [name, setName] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const  [token, _] = useLocalStorage("token", "");
+
+    async function fetchUserDetail() {
+        const response = await userDetail(token)
+        const responseBody = await response.json()
+
+        if (response.status === 200) {
+            setName(responseBody.data.name)
+        } else {
+            await alertError(responseBody.errors)
+        }
+    }
+
+    async function handleSubmitProfile(e) {
+        e.preventDefault();
+
+        const response = await userUpdateProfile(token, {name});
+        const responseBody = await response.json();
+        console.log(responseBody)
+
+        if (response.status === 200) {
+            await alertSuccess("Profile berhasil diupdate")
+        } else {
+            await alertError(responseBody.errors)
+        }
+    }
+
+    async function handleSubmitPassword(e) {
+        e.preventDefault();
+
+        if (password !== confirmPassword) {
+            await alertError('Password tidak sesuai')
+            return;
+        }
+
+        const response = await userUpdatePassword(token, {password})
+        const responseBody = await response.json();
+        console.log(responseBody)
+
+        if (response.status === 200) {
+            setPassword('');
+            setConfirmPassword('');
+            await alertSuccess('Password berhasil diupdate')
+        } else {
+            await alertError(responseBody.errors)
+        }
+    }
+
+    useEffectOnce(() => {
+        fetchUserDetail()
+            .then(() => console.log("User Update fetched Successfully"))
+    })
 
     return (
         <>
@@ -21,7 +78,7 @@ export default function UserProfile() {
                             </div>
                             <h2 className="text-xl font-semibold text-white">Edit Profile</h2>
                         </div>
-                        <form>
+                        <form onSubmit={handleSubmitProfile}>
                             <div className="mb-5">
                                 <label htmlFor="name" className="block text-gray-300 text-sm font-medium mb-2">Full Name</label>
                                 <div className="relative">
@@ -29,7 +86,7 @@ export default function UserProfile() {
                                         <i className="fas fa-user text-gray-500" />
                                     </div>
                                     <input type="text" id="name" name="name" className="w-full pl-10 pr-3 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" placeholder="Enter your full name" required
-                                    value={name} onChange={(e) => setName(e.target.value)}/>
+                                        value={name} onChange={(e) => setName(e.target.value)} />
                                 </div>
                             </div>
                             <div className="mt-6">
@@ -40,7 +97,7 @@ export default function UserProfile() {
                         </form>
                     </div>
                 </div>
-              
+
                 <div className="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in">
                     <div className="p-6">
                         <div className="flex items-center mb-4">
@@ -49,7 +106,7 @@ export default function UserProfile() {
                             </div>
                             <h2 className="text-xl font-semibold text-white">Change Password</h2>
                         </div>
-                        <form>
+                        <form onSubmit={handleSubmitPassword}>
                             <div className="mb-5">
                                 <label htmlFor="new_password" className="block text-gray-300 text-sm font-medium mb-2">New Password</label>
                                 <div className="relative">
@@ -57,7 +114,7 @@ export default function UserProfile() {
                                         <i className="fas fa-lock text-gray-500" />
                                     </div>
                                     <input type="password" id="new_password" name="new_password" className="w-full pl-10 pr-3 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" placeholder="Enter your new password" required
-                                    value={password} onChange={(e) => setPassword(e.target.value)}/>
+                                        value={password} onChange={(e) => setPassword(e.target.value)} />
                                 </div>
                             </div>
                             <div className="mb-5">
@@ -67,7 +124,7 @@ export default function UserProfile() {
                                         <i className="fas fa-check-double text-gray-500" />
                                     </div>
                                     <input type="password" id="confirm_password" name="confirm_password" className="w-full pl-10 pr-3 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" placeholder="Confirm your new password" required
-                                    value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
+                                        value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                                 </div>
                             </div>
                             <div className="mt-6">
