@@ -1,4 +1,4 @@
-const userUpdateProfile = async(token, {name}) => {
+const userUpdateProfile = async (token, {name}) => {
     return await fetch(`${import.meta.env.VITE_API_PATH}/users/current`, {
         method: 'PATCH',
         headers: {
@@ -8,7 +8,7 @@ const userUpdateProfile = async(token, {name}) => {
         },
         body: JSON.stringify({
             name
-        })
+        }),
     })
 }
 
