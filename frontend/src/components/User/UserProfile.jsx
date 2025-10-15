@@ -1,9 +1,7 @@
 import { useState } from "react"
 import { useEffectOnce, useLocalStorage } from "react-use"
-import userUpdateProfile from "../../lib/api/updateProfileApi"
 import { alertError, alertSuccess } from "../../lib/alert"
-import userUpdatePassword from "../../lib/api/updatePassword";
-import userDetail from "../../lib/api/detailApi";
+import { userDetail, userUpdatePassword, userUpdateProfile } from "../../lib/api/UserApi";
 
 export default function UserProfile() {
 
@@ -31,7 +29,7 @@ export default function UserProfile() {
         console.log(responseBody)
 
         if (response.status === 200) {
-            await alertSuccess("Profile berhasil diupdate")
+            await alertSuccess("Profile update successfully")
         } else {
             await alertError(responseBody.errors)
         }
