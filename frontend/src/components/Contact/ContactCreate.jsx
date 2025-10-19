@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { contactCreate } from "../../lib/api/ContactApi";
 import { alertError, alertSuccess } from "../../lib/alert";
 import { useLocalStorage } from "react-use";
@@ -11,6 +11,7 @@ export default function ContactCreate() {
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [token, _] = useLocalStorage("token", "")
+    const navigate = useNavigate()
 
     // async function fetchContactDetail() {
     //     const response = await contactDetail(token)
@@ -37,11 +38,10 @@ export default function ContactCreate() {
         console.log(responseBody)
 
         if(response.status === 200) {
-            setFirstName('')
-            setLastName('')
-            setEmail('')
-            setPhone('')
             await alertSuccess('Create contact successfully')
+            navigate({
+                pathname: '/dashboard/contacts'
+            })
         } else {
             await alertError(responseBody.errors)
         }
