@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router"
 import { useEffectOnce, useLocalStorage } from "react-use"
-import { contactList } from "../../lib/api/ContactApi"
-import { alertError } from "../../lib/alert"
+import { contactDelete, contactList } from "../../lib/api/ContactApi"
+import { alertConfirm, alertError, alertSuccess } from "../../lib/alert"
 
 export default function ContactList() {
 
@@ -28,10 +28,27 @@ export default function ContactList() {
         setReload(!reload)
     }
 
-    function handleSearch(e) {
+    function handleSearchContacts(e) {
         e.preventDefault()
         setPage(1)
         setReload(!reload)
+    }
+
+    async function handleDeleteContacts(id) {
+        if (!await alertConfirm('Are you sure you want to delete this contacts')) {
+            return ;
+        }
+
+        const response = await contactDelete(token, id)
+        const responseBody = await response.json()
+        console.log(responseBody)
+
+        if (response.status === 200) {
+            await alertSuccess('Delete contacts successfully')
+            setReload(!reload)
+        } else {
+            await alertConfirm(responseBody.errors)
+        }
     }
 
     async function fetchContacts() {
@@ -107,7 +124,7 @@ export default function ContactList() {
                         </button>
                     </div>
                     <div id="searchFormContent" className="mt-4">
-                        <form onSubmit={handleSearch} >
+                        <form onSubmit={handleSearchContacts} >
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                                 <div>
                                     <label htmlFor="search_name" className="block text-gray-300 text-sm font-medium mb-2">Name</label>
@@ -202,7 +219,7 @@ export default function ContactList() {
                                     <Link to={`/dashboard/contacts/${contact.id}/edit`} className="px-4 py-2 bg-gradient text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-md flex items-center">
                                         <i className="fas fa-edit mr-2" /> Edit
                                     </Link>
-                                    <button className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-md flex items-center">
+                                    <button onClick={() => handleDeleteContacts(contact.id)} className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-md flex items-center">
                                         <i className="fas fa-trash-alt mr-2" /> Delete
                                     </button>
                                 </div>
