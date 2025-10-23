@@ -1,13 +1,40 @@
-import { Link } from "react-router";
+import { useState } from "react";
+import { Link, useParams } from "react-router";
+import { contactDetail } from "../../lib/api/ContactApi";
+import { useEffectOnce, useLocalStorage } from "react-use";
+import { alertError } from "../../lib/alert";
 
 export default function ContactDetail() {
+    const [contact, setContact] = useState({})
+    const [token, _] = useLocalStorage("token", "")
+    const { id } = useParams()
+
+    async function fetchContactDetail() {
+        const response = await contactDetail(token, id)
+        const responseBody = await response.json()
+        console.log(responseBody)
+
+        if (response.status === 200) {
+            setContact(responseBody.data)
+                                                                                                                                                                                                                   
+        } else {
+            await alertError(responseBody.errors)
+        }
+    }
+
+    useEffectOnce(() => {
+        fetchContactDetail()
+            .then(() => console.log("fetching contact detail success"))
+    })
+
+
     return (
         <>
             <div>
                 <div className="flex items-center mb-6">
-                    <li to="/dashboard/contacts" className="text-blue-400 hover:text-blue-300 mr-4 flex items-center transition-colors duration-200">
+                    <Link to="/dashboard/contacts" className="text-blue-400 hover:text-blue-300 mr-4 flex items-center transition-colors duration-200">
                         <i className="fas fa-arrow-left mr-2" /> Back to Contacts
-                    </li>
+                    </Link>
                     <h1 className="text-2xl font-bold text-white flex items-center">
                         <i className="fas fa-id-card text-blue-400 mr-3" /> Contact Details
                     </h1>
@@ -19,10 +46,10 @@ export default function ContactDetail() {
                             <div className="w-20 h-20 bg-gradient rounded-full mx-auto flex items-center justify-center mb-4 shadow-lg">
                                 <i className="fas fa-user text-3xl text-white" />
                             </div>
-                            <h2 className="text-2xl font-bold text-white mb-2">John Doe</h2>
+                            <h2 className="text-2xl font-bold text-white mb-2">{contact.first_name} {contact.last_name}</h2>
                             <div className="w-24 h-1 bg-gradient mx-auto rounded-full" />
                         </div>
- 
+
                         <div className="space-y-5 mb-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div className="bg-gray-700 bg-opacity-50 p-5 rounded-lg shadow-md border border-gray-600 transition-all duration-200 hover:bg-opacity-70">
@@ -30,14 +57,14 @@ export default function ContactDetail() {
                                         <i className="fas fa-user-tag text-blue-400 mr-2" />
                                         <h3 className="text-gray-300 text-sm font-medium">First Name</h3>
                                     </div>
-                                    <p className="text-white text-lg ml-6">John</p>
+                                    <p className="text-white text-lg ml-6">{contact.first_name}</p>
                                 </div>
                                 <div className="bg-gray-700 bg-opacity-50 p-5 rounded-lg shadow-md border border-gray-600 transition-all duration-200 hover:bg-opacity-70">
                                     <div className="flex items-center mb-2">
                                         <i className="fas fa-user-tag text-blue-400 mr-2" />
                                         <h3 className="text-gray-300 text-sm font-medium">Last Name</h3>
                                     </div>
-                                    <p className="text-white text-lg ml-6">Doe</p>
+                                    <p className="text-white text-lg ml-6">{contact.last_name}</p>
                                 </div>
                             </div>
                             <div className="bg-gray-700 bg-opacity-50 p-5 rounded-lg shadow-md border border-gray-600 transition-all duration-200 hover:bg-opacity-70">
@@ -45,14 +72,14 @@ export default function ContactDetail() {
                                     <i className="fas fa-envelope text-blue-400 mr-2" />
                                     <h3 className="text-gray-300 text-sm font-medium">Email</h3>
                                 </div>
-                                <p className="text-white text-lg ml-6">john.doe@example.com</p>
+                                <p className="text-white text-lg ml-6">{contact.email}</p>
                             </div>
                             <div className="bg-gray-700 bg-opacity-50 p-5 rounded-lg shadow-md border border-gray-600 transition-all duration-200 hover:bg-opacity-70">
                                 <div className="flex items-center mb-2">
                                     <i className="fas fa-phone text-blue-400 mr-2" />
                                     <h3 className="text-gray-300 text-sm font-medium">Phone</h3>
                                 </div>
-                                <p className="text-white text-lg ml-6">+1 (555) 123-4567</p>
+                                <p className="text-white text-lg ml-6">{contact.phone}</p>
                             </div>
                         </div>
 
@@ -109,9 +136,9 @@ export default function ContactDetail() {
                                         </p>
                                     </div>
                                     <div className="flex justify-end space-x-3">
-                                        <a href="edit_address.html" className="px-4 py-2 bg-gradient text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-md flex items-center">
+                                        <Link to="/dashboard/contacts/:id/edit" className="px-4 py-2 bg-gradient text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-md flex items-center">
                                             <i className="fas fa-edit mr-2" /> Edit
-                                        </a>
+                                        </Link>
                                         <button className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-md flex items-center">
                                             <i className="fas fa-trash-alt mr-2" /> Delete
                                         </button>
@@ -163,16 +190,17 @@ export default function ContactDetail() {
                                 </div>
                             </div>
                         </div>
-
-                        <div className="flex justify-end space-x-4">
-                            <Link to="/dashboard/contacts" className="px-5 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 flex items-center shadow-md">
-                                <i className="fas fa-arrow-left mr-2" /> Back
-                            </Link>
-                            <Link to="/dashboard/contacts/edit" className="px-5 py-3 bg-gradient text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-lg transform hover:-translate-y-0.5 flex items-center">
-                                <i className="fas fa-user-edit mr-2" /> Edit Contact
-                            </Link>
-                        </div>
-                    </div></div></div>
+                            <div className="flex justify-end space-x-4">
+                                <Link to="/dashboard/contacts" className="px-5 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 flex items-center shadow-md">
+                                    <i className="fas fa-arrow-left mr-2" /> Back
+                                </Link>
+                                <Link to={`/dashboard/contacts/${id}/edit`} className="px-5 py-3 bg-gradient text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-lg transform hover:-translate-y-0.5 flex items-center">
+                                    <i className="fas fa-user-edit mr-2" /> Edit Contact
+                                </Link>
+                            </div>
+                    </div>
+                </div>
+            </div>
 
         </>
     )

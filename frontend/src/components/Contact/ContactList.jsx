@@ -183,7 +183,7 @@ export default function ContactList() {
                     {contacts.map(contact => (
                         <div key={contact.id} className="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in">
                             <div className="p-6">
-                                <Link to={`/dashboard/contacts/${contact.id}/detail`} className="block cursor-pointer hover:bg-gray-700 rounded-lg transition-all duration-200 p-3">
+                                <Link to={`/dashboard/contacts/${contact.id}`} className="block cursor-pointer hover:bg-gray-700 rounded-lg transition-all duration-200 p-3">
                                     <div className="flex items-center mb-3">
                                         <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-3 shadow-md">
                                             <i className="fas fa-user text-white" />
