@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { contactDetail } from "../../lib/api/ContactApi";
 import { useEffectOnce, useLocalStorage } from "react-use";
 import { alertError, alertSuccess } from "../../lib/alert";
@@ -15,6 +15,7 @@ export default function AddressCreate() {
     const [province, setProvince] = useState('')
     const [country, setCountry] = useState('')
     const [postal_code, setPostalCode] = useState('')
+    const navigate = useNavigate()
 
     async function fetchContactDetail(){
         const response = await contactDetail(token, id)
@@ -43,6 +44,9 @@ export default function AddressCreate() {
 
         if (response.status === 200) {
             await alertSuccess('Create Address Success')
+            await navigate({
+                pathname: `/dashboard/contacts/${id}`
+            })
         } else {
             await alertError(responseBody.errors)
         }
