@@ -20,12 +20,13 @@ createRoot(document.getElementById('root')).render(
       <Routes>
 
         <Route element={<Layout/>}>
+          
           <Route path='/register' element={<UserRegister/>}/>
           <Route path='/login' element={<UserLogin/>}/>
         </Route>
         
         <Route path='/dashboard' element={<DashboardLayout/>}>
-        
+          
           <Route path='users'>
             <Route path='profile' element={<UserProfile/>}/>
             <Route path='logout' element={<UserLogout/>}/>
