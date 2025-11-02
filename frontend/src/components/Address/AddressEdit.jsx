@@ -16,7 +16,7 @@ export default function AddressEdit() {
     const [contact, setContact] = useState({})
     const { id, addressId } = useParams()
 
-    async function fetchContactDetail() {
+    async function fetchContact() {
         const response = await contactDetail(token, id)
         const responseBody = await response.json()
         console.log(responseBody)
@@ -28,7 +28,7 @@ export default function AddressEdit() {
         }
     }
 
-    async function fetchAddressDetail() {
+    async function fetchAddress() {
         const response = await addressDetail(token, id, addressId)
         const responseBody = await response.json()
         console.log(responseBody)
@@ -66,9 +66,9 @@ export default function AddressEdit() {
     }
 
     useEffectOnce(() => {
-        fetchContactDetail()
+        fetchContact()
             .then(() => console.log('fetch contact detail successfully'))
-        fetchAddressDetail()
+        fetchAddress()
             .then(() => console.log('fetch address list successfully'))
     })
 
