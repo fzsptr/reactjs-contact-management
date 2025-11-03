@@ -1,6 +1,27 @@
-import { Link, Outlet } from "react-router";
+import { Link, Navigate, Outlet, useNavigate, } from "react-router";
+import { useLocalStorage } from "react-use";
+import { alertError } from "../lib/alert";
+import { useEffect } from "react";
 
 export default function DashboardLayout() {
+
+    const [token, _] = useLocalStorage("token", "")
+    const navigate = useNavigate()
+
+    async function authLogin() {
+        if (!token) {
+            await alertError("You are not logged in, please log in first")
+            navigate({
+                pathname: '/login'
+            })
+        }
+    }
+
+    useEffect(() => {
+        authLogin()
+    }, [token])
+
+
     return (
         <>
             <div className="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen flex flex-col">
@@ -30,8 +51,8 @@ export default function DashboardLayout() {
                 </header>
 
                 <main className="container mx-auto px-4 py-8 flex-grow">
-                    
-                    <Outlet/>
+
+                    <Outlet />
 
                     <div className="mt-10 mb-6 text-center text-gray-400 text-sm animate-fade-in">
                         <p>© 2025 Contact Management. All rights reserved.</p>
