@@ -57,7 +57,6 @@ export default function ContactEdit() {
             .then(() => console.log('fetching contact detail success'))
     })
 
-
     return (
         <>
             <div>
