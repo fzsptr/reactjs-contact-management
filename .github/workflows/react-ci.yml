@@ -25,6 +25,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
       
       - name: Install dependecies
         run: npm ci
@@ -41,7 +42,6 @@ jobs:
   test:
     name: Test Frontend React
     runs-on: ubuntu-latest
-    needs: build
 
     steps:
       - name: Clone repository
@@ -51,6 +51,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install dependecies
         run: npm ci
