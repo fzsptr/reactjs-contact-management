@@ -9,7 +9,7 @@ vi.mock('react-use', () => ({
 }))
 // cek router
 describe('ContactCreate', () => {
-  // render halaman dan elemen form
+  // skenario: render halaman dan elemen form
   it('menampilkan form tambah kontak', () => {
     render(
       <MemoryRouter>
