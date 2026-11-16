@@ -7,9 +7,7 @@ import ContactCreate from '../src/components/Contact/ContactCreate'
 vi.mock('react-use', () => ({
   useLocalStorage: () => ['', vi.fn()]
 }))
-// cek router
 describe('ContactCreate', () => {
-  // skenario: render halaman dan elemen form
   it('menampilkan form tambah kontak', () => {
     render(
       <MemoryRouter>
