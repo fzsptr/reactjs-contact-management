@@ -1,0 +1,14 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
+    image: contact-management-frontend:v1.0
+
+    container_name: contact-management-frontend
+
+    ports:
+      - "8080:80"
+
+    restart: unless-stopped
