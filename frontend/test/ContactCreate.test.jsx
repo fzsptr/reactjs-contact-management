@@ -23,7 +23,7 @@ describe('ContactCreate', () => {
     expect(screen.getByLabelText('Phone'))
     expect(screen.getByRole('button', { name: /create contact/i }))
   })
-  it('mentesting nilai inputan saat user mengetik', () => {
+  it('mentesting nilai inputan12 saat user mengetik', () => {
     render(
       <MemoryRouter>
         <ContactCreate />
